@@ -5,6 +5,21 @@ Integration testing framework for Singer taps. This is a ***new*** library that 
 
 **See `tests/test_standard_tests.py` for a usage example of the standard canary test.**
 
+## Writing Test Feature: Cache a sync
+
+Running a sync can take awhile and when you are just trying to sort out the test asserts, it can
+waste a lot of time.
+
+To enable this behavior, just export the following environment variables
+
+``` shell
+export SINGER_TAP_TESTER_USE_CACHE=true
+export SINGER_TAP_TESTER_CACHE_FILE='./tap_output'
+```
+
+This will cause the tests to run a sync and write to `SINGER_TAP_TESTER_CACHE_FILE`. To regenerate
+the cache, just delete the current file or pass a new name to `SINGER_TAP_TESTER_CACHE_FILE`.
+
 ## To Document:
 
 1. StandardTests usage example

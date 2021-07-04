@@ -109,6 +109,21 @@ def run_discovery(tap_entry_point, config):
 def run_sync(tap_entry_point, config, catalog, state):
 
     LOGGER.info("Running sync...")
-    raw_singer_messages = __run_tap(tap_entry_point, config=config, catalog=catalog, state=state)
+
+    use_cache = os.getenv('SINGER_TAP_TESTER_USE_CACHE') == 'true'
+    cache_file = os.getenv('SINGER_TAP_TESTER_CACHE_FILE')
+    cache_miss = os.path.exists(cache_file)
+
+    if not (use_cache and cache_miss):
+        raw_singer_messages = __run_tap(tap_entry_point,
+                                        config=config,
+                                        catalog=catalog,
+                                        state=state)
+        if use_cache:
+            with open(cache_file, 'w') as outfile:
+                outfile.write(raw_singer_messages)
+    else:
+        with open(cache_file) as infile:
+            raw_singer_messages = infile.read()
 
     return list(map(json.loads, raw_singer_messages.strip().split(os.linesep)))

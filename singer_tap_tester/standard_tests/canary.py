@@ -1,4 +1,7 @@
 from singer_tap_tester import cli, partition, user
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 def test_sync_canary(scenario):
     """
@@ -18,7 +21,6 @@ def test_sync_canary(scenario):
     new_catalog = user.select_all_streams_and_fields(catalog)
     tap_output = cli.run_sync(scenario.tap_name, scenario.get_config(), new_catalog, {})
     # TODO: Run through target's validating handler
-    # TODO: Generate a final summary report so that this test can be used to gauge the potential usefulness of the specific data set available to the test author/runner
 
     messages_by_type = partition.by_type(tap_output)
     for message_type, messages in messages_by_type.items():
@@ -31,3 +33,7 @@ def test_sync_canary(scenario):
                 for stream, records in messages.items():
                     with scenario.subTest(stream=stream):
                         scenario.assertGreater(len(records), 50)
+
+    # Log some info about the data synced during this test
+    for stream, records in messages_by_type['RECORD'].items():
+        LOGGER.info(f"{stream} synced {len(records)} records")

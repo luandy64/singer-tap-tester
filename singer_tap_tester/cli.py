@@ -3,6 +3,7 @@ import inspect
 import logging
 import os
 import json
+import subprocess
 import sys
 import unittest.mock
 import tempfile
@@ -137,7 +138,6 @@ def pass_to_target(tap_output):
     run_target_command = get_target_command()
     LOGGER.info("Starting target")
     LOGGER.info(f"CLI command to reproduce: {' '.join(run_target_command)}")
-    import subprocess
 
     target = subprocess.run(run_target_command,
                             stdout=subprocess.DEVNULL,

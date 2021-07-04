@@ -14,13 +14,7 @@ import logging
 import sys
 
 # TODO: Make this easier to work with?
-# FIXME: It's doubling logs now, likely due to singer-python's logger existing...
-LOGGER = logging.getLogger("singer_tap_tester.user")
-LOGGER.setLevel(logging.INFO)
-formatter = logging.Formatter(fmt='%(levelname)s %(message)s', datefmt='')
-handler = logging.StreamHandler(sys.stderr)
-handler.setFormatter(formatter)
-LOGGER.addHandler(handler)
+LOGGER = logging.getLogger(__name__)
 
 def select_stream(catalog_entry):
     "Appends `selected` metadata to the stream's catalog entry."

@@ -9,13 +9,7 @@ import tempfile
 from contextlib import contextmanager, ExitStack
 
 # TODO: Make this easier to work with?
-# FIXME: It's doubling logs now, likely due to singer-python's logger existing...
-LOGGER = logging.getLogger("singer_tap_tester.cli")
-LOGGER.setLevel(logging.INFO)
-formatter = logging.Formatter(fmt='%(levelname)s %(message)s', datefmt='')
-handler = logging.StreamHandler(sys.stderr)
-handler.setFormatter(formatter)
-LOGGER.addHandler(handler)
+LOGGER = logging.getLogger(__name__)
 
 class PatchStdOut():
     """

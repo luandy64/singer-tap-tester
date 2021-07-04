@@ -143,6 +143,6 @@ def pass_to_target(tap_output):
                             stdout=subprocess.DEVNULL,
                             universal_newlines=True,
                             bufsize=1,
-                            input="\n".join(json.dumps(x) for x in tap_output if x))
+                            input=os.linesep.join(json.dumps(x) for x in tap_output if x))
 
     return target.returncode

@@ -72,6 +72,7 @@ def __run_tap(tap_entry_point,config=None,catalog=None,state=None,discover=False
         with open(file_name, 'w') as f:
             json.dump(catalog, f)
         argvs.extend(['--catalog', file_name])
+        argvs.extend(['--properties', file_name])
 
     if state:
         file_name = '/tmp/tap_state.json'

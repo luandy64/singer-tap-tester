@@ -62,5 +62,5 @@ class StandardTests(BaseTapTest):
 
     def runTest(self):
         for test_fun in standard_test_functions:
-            with self.subTest(test_fun.__name__):
+            with self.subTest(test_name=test_fun.__name__):
                 test_fun(self)

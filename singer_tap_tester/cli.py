@@ -127,3 +127,22 @@ def run_sync(tap_entry_point, config, catalog, state):
             raw_singer_messages = infile.read()
 
     return list(map(json.loads, raw_singer_messages.strip().split(os.linesep)))
+
+def get_target_command():
+    executable = os.getenv('TARGET_EXECUTABLE')
+    options = os.getenv('TARGET_OPTIONS')
+    return [executable, options]
+
+def pass_to_target(tap_output):
+    run_target_command = get_target_command()
+    LOGGER.info("Starting target")
+    LOGGER.info(f"CLI command to reproduce: {' '.join(run_target_command)}")
+    import subprocess
+
+    target = subprocess.run(run_target_command,
+                            stdout=subprocess.DEVNULL,
+                            universal_newlines=True,
+                            bufsize=1,
+                            input="\n".join(json.dumps(x) for x in tap_output if x))
+
+    return target.returncode

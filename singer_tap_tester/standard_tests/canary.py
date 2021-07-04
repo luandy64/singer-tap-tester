@@ -20,7 +20,6 @@ def test_sync_canary(scenario):
     catalog = cli.run_discovery(scenario.tap_name, scenario.get_config())
     new_catalog = user.select_all_streams_and_fields(catalog)
     tap_output = cli.run_sync(scenario.tap_name, scenario.get_config(), new_catalog, {})
-    # TODO: Run through target's validating handler
 
     messages_by_type = partition.by_type(tap_output)
     for message_type, messages in messages_by_type.items():
@@ -37,3 +36,9 @@ def test_sync_canary(scenario):
     # Log some info about the data synced during this test
     for stream, records in messages_by_type['RECORD'].items():
         LOGGER.info(f"{stream} synced {len(records)} records")
+
+    # Run through target-stitch's validating handler
+    target_exit_code = cli.pass_to_target(tap_output)
+
+    scenario.assertEqual(target_exit_code,
+                         0)
